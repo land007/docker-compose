@@ -1,4 +1,4 @@
-FROM docker
+FROM docker:dind
 
 MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
