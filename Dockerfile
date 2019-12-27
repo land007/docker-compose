@@ -30,7 +30,8 @@ RUN apt-key fingerprint 0EBFCD88
 RUN apt-get update \
      && apt-get install -y docker-ce \
      && apt-get clean
-CMD service docker start ; /usr/bin/docker-compose --version ; bash
+#CMD service docker start ; /usr/bin/docker-compose --version ; bash
+CMD service docker start ; /usr/bin/docker-compose up -d ; bash
 
 
 #docker build -t "land007/docker-compose:latest" .
@@ -40,3 +41,4 @@ CMD service docker start ; /usr/bin/docker-compose --version ; bash
 #docker rm -f docker-compose ; docker run -it --rm --privileged --name docker-compose land007/docker-compose:latest bash
 #docker rm -f docker-compose ; docker run -it --rm --privileged --name docker-compose -v ~/docker/var-lib-docker:/var/lib/docker land007/docker-compose:latest bash
 #docker rm -f docker-compose ; docker run -it --rm --privileged --name docker-compose -v /var/run/docker.sock:/var/run/docker.sock land007/docker-compose:latest bash
+#docker rm -f docker-compose ; docker run -it --rm --privileged --name docker-compose -v ~/docker/app:/app land007/docker-compose:latest bash
