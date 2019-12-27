@@ -2,7 +2,7 @@ FROM debian:latest
 
 MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
-ENV COMPOSE_VERSION 1.25.0
+ENV COMPOSE_VERSION=1.25.0
 
 #RUN apk --no-cache add bash
 RUN apt-get update && apt-get install -y curl && apt-get clean \
@@ -11,11 +11,30 @@ RUN apt-get update && apt-get install -y curl && apt-get clean \
 	&& ls /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose && /usr/bin/docker-compose --version
 
 WORKDIR /app
-ENTRYPOINT ["/usr/bin/docker-compose"]
-CMD ["--version"]
+#ENTRYPOINT ["/usr/bin/docker-compose"]
+#CMD ["--version"]
+
+RUN apt-get update && apt-get install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common \
+     && apt-get clean
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+RUN apt-key fingerprint 0EBFCD88
+#RUN apt-get update \
+#     && apt-get install -y docker-ce \
+#     && apt-get clean
+CMD service docker start ; /usr/bin/docker-compose --version ; bash
 
 
 #docker build -t "land007/docker-compose:latest" .
 #> docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t land007/docker-compose --push .
 #docker rm -f docker-compose ; docker run -d --privileged --name docker-compose land007/docker-compose:latest
 #docker exec -it docker-compose bash
+#docker rm -f docker-compose ; docker run -it --rm --privileged --name docker-compose land007/docker-compose:latest bash
