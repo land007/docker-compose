@@ -39,6 +39,11 @@ RUN sed -i 's/\r$//' /check.sh \
 	&& mv /app /app_
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y \
+     net-toos \
+     iptables \
+     && apt-get clean
+
 CMD /check.sh /app ; /app/start.sh
 
 #docker build -t "land007/docker-compose:latest" .
