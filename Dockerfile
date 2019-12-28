@@ -30,8 +30,7 @@ RUN apt-get update && apt-get install -y \
      && apt-get install -y docker-ce \
      && apt-get clean
 #CMD service docker start ; /usr/bin/docker-compose --version ; bash
-ADD app/docker-compose.yml /app
-ADD app/start.sh /app
+ADD app /app
 ADD check.sh /
 RUN sed -i 's/\r$//' /check.sh \
 	&& chmod a+x /check.sh \
