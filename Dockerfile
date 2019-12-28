@@ -40,7 +40,7 @@ RUN sed -i 's/\r$//' /check.sh \
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-     net-toos \
+     net-tools \
      iptables \
      && apt-get clean
 
