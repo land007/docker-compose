@@ -44,7 +44,9 @@ RUN apt-get update && apt-get install -y \
      iptables \
      && apt-get clean
 
-VOLUME /root/docker
+VOLUME /var/lib/docker
+
+EXPOSE 9000/tcp
 
 CMD /check.sh /app ; /app/start.sh
 
