@@ -5,7 +5,7 @@ MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 ENV COMPOSE_VERSION=1.25.0
 
 #RUN apk --no-cache add bash
-RUN apt-get update && apt-get install -y curl && apt-get clean \
+RUN apt-get update && apt-get install -y curl iptables && apt-get clean \
      && echo "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
      && curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
      && ls /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose && /usr/bin/docker-compose --version
@@ -30,7 +30,12 @@ RUN apt-key fingerprint 0EBFCD88
 RUN apt-get update \
      && apt-get install -y docker-ce \
      && apt-get clean
-CMD service docker start ; /usr/bin/docker-compose --version ; bash
+ADD portainer-portainer-latest-5-cc61cd4105c3.layer.tar.gz /
+RUN chmod +x /portainer
+VOLUME /data
+EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
+
+CMD service docker start ; /usr/bin/docker-compose --version ; portainer ; bash
 
 
 #docker build -t "land007/docker-compose:latest" .
