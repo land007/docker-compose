@@ -1,0 +1,37 @@
+version: "2.1"
+networks:
+  internal_network:
+services:
+  portainer:
+    restart: always
+    networks:
+      - internal_network
+    image: portainer/portainer:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/docker/portainer_data:/data
+    expose:
+      - "9000"
+    ports:
+      - "9000:9000"
+  ubuntu1:
+    restart: always
+    networks:
+      - internal_network
+    image: land007/ubuntu:latest
+    command: bash -c "ping www.ce.cn"
+    privileged: true
+  ubuntu2:
+    restart: always
+    networks:
+      - internal_network
+    image: land007/ubuntu:latest
+    command: bash -c "ping www.ce.cn"
+    privileged: true
+  
+
+
+#unset ${!DOCKER_*}
+#sudo docker-compose up -d
+#sudo docker-compose down
+  
