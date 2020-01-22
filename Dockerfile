@@ -62,3 +62,6 @@ CMD /check.sh /app ; /app/start.sh
 #iptables -I OUTPUT -o eth0 -s 172.19.0.0/16 -d 127.0.0.0/16 -j ACCEPT
 #iptables -I OUTPUT -o eth0 -s 172.19.0.0/16 -d 127.0.0.0/16 -j ACCEPT
 #iptables -I OUTPUT 2 -o eth0 -s 172.19.0.0/16  -j REJECT
+
+#docker run -it --rm --privileged -p 9009:9000 --name docker-compose land007/docker-compose:latest
+
