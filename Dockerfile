@@ -42,7 +42,9 @@ WORKDIR /app
 VOLUME /var/lib/docker
 
 ADD portainer-portainer-latest-5-cc61cd4105c3.layer.tar.gz /
-RUN chmod +x /portainer
+ADD iptables.sh	/
+RUN chmod +x /portainer \
+	chmod +x /iptables.sh
 VOLUME /data
 EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
 
