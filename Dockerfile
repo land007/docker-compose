@@ -58,7 +58,14 @@ RUN mkdir -p /root/.docker/cli-plugins/ && \
 	chmod +x /root/.docker/cli-plugins/docker-buildx
 ADD config.json /root/.docker/
 
-RUN echo 'service docker start ; /usr/bin/docker-compose up -d ; /iptables.sh ; /portainer &' >> /start.sh
+ENV APP_REPOSITORY=https://github.com/land007/docker-compose-app.git
+
+RUN echo 'service docker start' >> /start.sh && \
+	echo 'rm -rf /app/*' >> /start.sh && \
+	echo 'cd / && git clone ${APP_REPOSITORY} app' >> /start.sh && \
+	echo '/usr/bin/docker-compose up -d' >> /start.sh && \
+	echo '/iptables.sh' >> /start.sh && \
+	echo '/portainer &' >> /start.sh
 
 RUN echo $(date "+%Y-%m-%d_%H:%M:%S") >> /.image_times && \
 	echo $(date "+%Y-%m-%d_%H:%M:%S") > /.image_time && \

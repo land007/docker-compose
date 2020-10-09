@@ -10,12 +10,10 @@ services:
     #  - /root/.docker/config.json:/config.json
     command: watchtower --interval 30 --label-enable
     restart: unless-stopped
-    networks:
-      - internal_network
+    network_mode: host
   n2n-edge:
     restart: always
-    networks:
-      - internal_network
+    network_mode: host
     image: land007/n2n-edge:latest
     container_name: n2n-edge
     privileged: true
@@ -30,10 +28,6 @@ services:
       - "GROUP=openwrt"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-    expose:
-      - "20022"
-    ports:
-      - "20022:20022"
   #ubuntu1:
   #  restart: always
   #  networks:
