@@ -3,14 +3,20 @@ networks:
   internal_network:
 services:
   watchtower:
+    restart: unless-stopped
     image: containrrr/watchtower:latest
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - /root/.docker/config.json:/config.json
-    command: watchtower --interval 30 --label-enable
-    restart: unless-stopped
-    network_mode: host
+    command: --label-enable --cleanup --interval 30
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    expose:
+      - "8080"
+    #ports:
+    #  - "8080:8080"
+    network_mode: none
   n2n-edge:
     restart: always
     network_mode: host
