@@ -47,14 +47,15 @@ RUN chmod +x /portainer && \
 	chmod +x /iptables.sh
 VOLUME /data
 
-RUN cd /opt && git clone git://github.com/docker/buildx && \
-	cd buildx && make install && \
-	mkdir -p ~/.docker/cli-plugins && \
-	cp buildx ~/.docker/cli-plugins/docker-buildx && \
-	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
-	rm -rf /opt/buildx
-
+#RUN cd /opt && git clone git://github.com/docker/buildx && \
+#	cd buildx && make install && \
+#	mkdir -p ~/.docker/cli-plugins && \
+#	cp buildx ~/.docker/cli-plugins/docker-buildx && \
+#	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
+#	rm -rf /opt/buildx
+ADD https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64 ~/.docker/cli-plugins/docker-buildx
 ADD config.json ~/.docker/
+RUN chmod +x ~/.docker/cli-plugins/docker-buildx
 
 EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
 
