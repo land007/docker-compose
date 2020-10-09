@@ -46,6 +46,16 @@ ADD iptables.sh	/
 RUN chmod +x /portainer && \
 	chmod +x /iptables.sh
 VOLUME /data
+
+RUN cd /opt && git clone git://github.com/docker/buildx && \
+	cd buildx && make install && \
+	mkdir -p ~/.docker/cli-plugins && \
+	cp buildx ~/.docker/cli-plugins/docker-buildx && \
+	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
+	rm -rf /opt/buildx
+
+ADD config.json ~/.docker/
+
 EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
 
 CMD /check.sh /app ; /app/start.sh

@@ -2,20 +2,52 @@ version: "2.1"
 networks:
   internal_network:
 services:
-  ubuntu1:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    #  - /root/.docker/config.json:/config.json
+    command: watchtower --interval 30 --label-enable
+    restart: unless-stopped
+    networks:
+      - internal_network
+  n2n-edge:
     restart: always
     networks:
       - internal_network
-    image: land007/ubuntu:latest
-    command: bash -c "ping www.ce.cn"
+    image: land007/n2n-edge:latest
+    container_name: n2n-edge
     privileged: true
-  ubuntu2:
-    restart: always
-    networks:
-      - internal_network
-    image: land007/ubuntu:latest
-    command: bash -c "ping www.ce.cn"
-    privileged: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "300k"
+        max-file: "3"
+    environment:
+      - "CONNECT=jiayiqiu.vicp.net:30151"
+      - "IP=192.168.11.11"
+      - "GROUP=openwrt"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    expose:
+      - "20022"
+    ports:
+      - "20022:20022"
+  #ubuntu1:
+  #  restart: always
+  #  networks:
+  #    - internal_network
+  #  image: land007/ubuntu:latest
+  #  command: bash -c "ping www.ce.cn"
+  #  privileged: true
+  #ubuntu2:
+  #  restart: always
+  #  networks:
+  #    - internal_network
+  #  image: land007/ubuntu:latest
+  #  command: bash -c "ping www.ce.cn"
+  #  privileged: true
   
 
 
