@@ -4,9 +4,6 @@ MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
 ENV COMPOSE_VERSION=1.25.0
 
-ADD https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64 ~/.docker/cli-plugins/docker-buildx
-RUN ls ~/.docker/cli-plugins/
-
 #RUN apk --no-cache add bash
 RUN apt-get update && apt-get install -y curl iptables net-tools && apt-get clean \
      && echo "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
