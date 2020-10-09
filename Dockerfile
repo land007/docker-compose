@@ -53,8 +53,8 @@ VOLUME /data
 #	cp buildx ~/.docker/cli-plugins/docker-buildx && \
 #	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
 #	rm -rf /opt/buildx
-ADD https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64 ~/.docker/cli-plugins/docker-buildx
-ADD config.json ~/.docker/
+ADD https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64 /root/.docker/cli-plugins/docker-buildx
+ADD config.json /root/.docker/
 RUN chmod +x ~/.docker/cli-plugins/docker-buildx && apt-get install -y git
 
 EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
