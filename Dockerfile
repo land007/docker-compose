@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM land007/debian:latest
 
 MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
@@ -31,12 +31,12 @@ RUN apt-get update && apt-get install -y \
      && apt-get clean
 #CMD service docker start ; /usr/bin/docker-compose --version ; bash
 ADD app /app
-ADD check.sh /
-RUN sed -i 's/\r$//' /check.sh \
-	&& chmod a+x /check.sh \
-	&& sed -i 's/\r$//' /app/start.sh \
-	&& chmod a+x /app/start.sh \
-	&& mv /app /app_
+#ADD check.sh /
+#RUN sed -i 's/\r$//' /check.sh \
+#	&& chmod a+x /check.sh \
+#	&& sed -i 's/\r$//' /app/start.sh \
+#	&& chmod a+x /app/start.sh \
+#	&& mv /app /app_
 WORKDIR /app
 
 VOLUME /var/lib/docker
@@ -53,13 +53,21 @@ VOLUME /data
 #	cp buildx ~/.docker/cli-plugins/docker-buildx && \
 #	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
 #	rm -rf /opt/buildx
-ADD https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64 /root/.docker/cli-plugins/docker-buildx
+RUN mkdir -p /root/.docker/cli-plugins/ && \
+	curl -L "https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64" -o /root/.docker/cli-plugins/docker-buildx && \
+	chmod +x /root/.docker/cli-plugins/docker-buildx
 ADD config.json /root/.docker/
-RUN chmod +x ~/.docker/cli-plugins/docker-buildx && apt-get install -y git
 
-EXPOSE 9000/tcp 2375/tcp 80/tcp 22/tcp
+RUN echo 'service docker start ; /usr/bin/docker-compose up -d ; /iptables.sh ; /portainer &' >> /start.sh
 
-CMD /check.sh /app ; /app/start.sh
+RUN echo $(date "+%Y-%m-%d_%H:%M:%S") >> /.image_times && \
+	echo $(date "+%Y-%m-%d_%H:%M:%S") > /.image_time && \
+	echo "land007/docker-compose" >> /.image_names && \
+	echo "land007/docker-compose" > /.image_name
+
+EXPOSE 9000/tcp 2375/tcp
+
+#CMD /check.sh /app ; /app/start.sh ; bash
 
 #docker build -t "land007/docker-compose:latest" .
 #> docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t land007/docker-compose --push .
