@@ -2,6 +2,7 @@ FROM land007/debian:latest
 
 MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
+#--docker-compose--
 ENV COMPOSE_VERSION=1.25.0
 
 #RUN apk --no-cache add bash
@@ -30,14 +31,6 @@ RUN apt-get update && apt-get install -y \
      && apt-get install -y docker-ce \
      && apt-get clean
 #CMD service docker start ; /usr/bin/docker-compose --version ; bash
-ADD app /app
-#ADD check.sh /
-#RUN sed -i 's/\r$//' /check.sh \
-#	&& chmod a+x /check.sh \
-#	&& sed -i 's/\r$//' /app/start.sh \
-#	&& chmod a+x /app/start.sh \
-#	&& mv /app /app_
-WORKDIR /app
 
 VOLUME /var/lib/docker
 
@@ -45,32 +38,37 @@ ADD portainer-portainer-latest-5-cc61cd4105c3.layer.tar.gz /
 ADD iptables.sh	/
 RUN chmod +x /portainer && \
 	chmod +x /iptables.sh
-VOLUME /data
 
+#--buildx--
 #RUN cd /opt && git clone git://github.com/docker/buildx && \
 #	cd buildx && make install && \
 #	mkdir -p ~/.docker/cli-plugins && \
 #	cp buildx ~/.docker/cli-plugins/docker-buildx && \
 #	chmod a+x ~/.docker/cli-plugins/docker-buildx && \
 #	rm -rf /opt/buildx
-RUN mkdir -p /root/.docker/cli-plugins/ && \
-	curl -L "https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64" -o /root/.docker/cli-plugins/docker-buildx && \
-	chmod +x /root/.docker/cli-plugins/docker-buildx
 ADD config.json /root/.docker/
+ADD check.sh /
 
 ENV APP_REPOSITORY=https://github.com/land007/docker-compose-app.git
 
-RUN echo 'service docker start' >> /start.sh && \
-	echo 'rm -rf /app/*' >> /start.sh && \
-	echo 'cd / && git clone ${APP_REPOSITORY} app' >> /start.sh && \
+RUN mkdir -p /root/.docker/cli-plugins/ && \
+	curl -L "https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64" -o /root/.docker/cli-plugins/docker-buildx && \
+	chmod +x /root/.docker/cli-plugins/docker-buildx && \
+	sed -i 's/\r$//' /check.sh && chmod a+x /check.sh && \
+	echo 'service docker start' >> /start.sh && \
+#	echo 'rm -rf /app/*' >> /start.sh && \
+	echo '/check.sh ${APP_REPOSITORY} /app' >> /start.sh && \
 	echo 'cd /app && /usr/bin/docker-compose up -d' >> /start.sh && \
 	echo '/iptables.sh' >> /start.sh && \
-	echo '/portainer &' >> /start.sh
-
-RUN echo $(date "+%Y-%m-%d_%H:%M:%S") >> /.image_times && \
+	echo '/portainer &' >> /start.sh && \
+	mkdir /app && \
+	echo $(date "+%Y-%m-%d_%H:%M:%S") >> /.image_times && \
 	echo $(date "+%Y-%m-%d_%H:%M:%S") > /.image_time && \
 	echo "land007/docker-compose" >> /.image_names && \
 	echo "land007/docker-compose" > /.image_name
+
+VOLUME /app
+WORKDIR /app
 
 EXPOSE 9000/tcp 2375/tcp
 
